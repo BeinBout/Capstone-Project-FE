@@ -1,1 +1,84 @@
 @import "tailwindcss";
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #A8C4E9 0%,
+    #C9D8F2 40%,
+    #E8EEF9 100%
+  );
+  color: #1E293B;
+  font-family: Arial, Helvetica, sans-serif;
+  
+}
+@keyframes windRight {
+  0% {
+    opacity: 0;
+    transform: translateX(120px) scale(0.95);
+    filter: blur(6px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-8px) scale(1.02);
+    filter: blur(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes windLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-120px);
+    filter: blur(6px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(8px);
+    filter: blur(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes breathing {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+.wind-right {
+  animation: windRight 1.6s ease-out forwards;
+}
+
+.wind-left {
+  animation: windLeft 1.6s ease-out forwards;
+}
+
+.breathing {
+  animation: breathing 4s ease-in-out infinite;
+}
+@keyframes windCard {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+    filter: blur(6px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.02);
+    filter: blur(0);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.wind-card {
+  animation: windCard 1.2s ease-out forwards;
+}
