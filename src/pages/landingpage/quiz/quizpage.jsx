@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { questions, options } from "../../../data/questions";
+import { questions, options } from "../../data/questions";
 import { 
   ChevronRight, ChevronLeft, RotateCcw, CheckCircle2, 
   ShieldCheck, Heart, Lock, UserPlus, Sparkles, 
