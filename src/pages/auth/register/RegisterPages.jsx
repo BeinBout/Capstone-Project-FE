@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DiagonalPattern = () => (
   <svg
@@ -18,6 +19,8 @@ const DiagonalPattern = () => (
 );
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -127,6 +130,7 @@ export default function RegisterPage() {
 
           {/* Login Button */}
           <button
+            onClick={() => navigate("/login")}
             className="w-full rounded-full py-3 font-medium text-sm mb-6 transition-colors hover:bg-white/30"
             style={{
               backgroundColor: "rgba(255,255,255,0.6)",
