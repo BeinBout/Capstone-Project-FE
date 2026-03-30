@@ -1,9 +1,9 @@
 import { Heart, Lock, Brain, Sprout, UserCheck } from "lucide-react";
-import EmpatiImg from "../assets/landing/Empati.jpeg";
-import SelfImg from "../assets/landing/Self.jpeg";
-import SafeImg from "../assets/landing/Safe.jpeg";
-import GrowthImg from "../assets/landing/growth.jpeg";
-import AiImg from "../assets/landing/Ai.jpeg";
+import EmpatiImg from "../assets/images/landing/Empati.jpeg";
+import SelfImg from "../assets/images/landing/Self.jpeg";
+import SafeImg from "../assets/images/landing/Safe.jpeg";
+import GrowthImg from "../assets/images/landing/growth.jpeg";
+import AiImg from "../assets/images/landing/Ai.jpeg";
 
 export default function Values() {
 

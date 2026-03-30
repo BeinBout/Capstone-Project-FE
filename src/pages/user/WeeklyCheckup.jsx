@@ -1,5 +1,5 @@
 import React, { useState } from 'react'; 
-import Layout from '../components/Sidebar';
+import Layout from '../../components/Sidebar';
 import { useNavigate } from 'react-router-dom';
 
 export default function WeeklyCheckup() {
