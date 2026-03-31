@@ -5,6 +5,7 @@ import LoginPages from '../pages/auth/login/LoginPages'
 import RegisterPages from '../pages/auth/register/RegisterPages'
 import CompleteData from '../pages/auth/complete/CompleteData'
 import QuizAnalysisResult from '../pages/auth/quiz-analysis/QuizAnalysisResult'
+import CallbackPage from '../pages/auth/callback/CallbackPage'
 
 // landing Pages
 import LandingPages from "../../src/layouts/LandingLayouts";
@@ -27,6 +28,7 @@ function AppRoutes() {
             <Route path="/register" element={<RegisterPages />} />
             <Route path="/complete-data" element={<CompleteData />} />
             <Route path="/quiz-analysis" element={<QuizAnalysisResult />} />
+            <Route path="/callback" element={<CallbackPage />} />
 
             {/* Dashboard & Features */}
             <Route path="/dashboard" element={<Dashboard />} />

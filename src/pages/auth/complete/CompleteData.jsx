@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { setupProfileAndQuiz } from "../../../services/auth/CompleteDataServices";
 
 const DiagonalPattern = () => (
     <svg
@@ -18,14 +20,60 @@ const DiagonalPattern = () => (
 );
 
 export default function CompleteData() {
+    const navigate = useNavigate();
+
+    const [namaLengkap, setNamaLengkap] = useState("");
     const [tinggiBadan, setTinggiBadan] = useState("");
     const [beratBadan, setBeratBadan] = useState("");
     const [umur, setUmur] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const inputStyle = {
         backgroundColor: "rgba(255,255,255,0.75)",
         color: "#4a6285",
         border: "1.5px solid #1a1a1a",
+    };
+
+    const handleSubmit = async () => {
+        if (!namaLengkap || !tinggiBadan || !beratBadan || !umur) {
+            setError("Semua field harus diisi.");
+            return;
+        }
+
+        // Ambil quiz_answers yang sudah dikumpulkan di step sebelumnya
+        const quizAnswers = JSON.parse(localStorage.getItem("quiz_answers") || "[]");
+        if (quizAnswers.length === 0) {
+            setError("Jawaban kuis tidak ditemukan. Silakan ulangi kuis.");
+            return;
+        }
+
+        setError("");
+        setIsLoading(true);
+
+        try {
+            const data = await setupProfileAndQuiz({
+                nama_lengkap: namaLengkap,
+                umur: Number(umur),
+                berat_badan: Number(beratBadan),
+                tinggi_badan: Number(tinggiBadan),
+                quiz_answers: quizAnswers,
+            });
+
+            // Simpan hasil AI ke localStorage agar bisa dibaca di halaman hasil
+            localStorage.setItem("quiz_result", JSON.stringify(data));
+
+            // Bersihkan quiz_answers yang sudah tidak diperlukan
+            localStorage.removeItem("quiz_answers");
+
+            navigate("/quiz/result");
+        } catch (err) {
+            const message =
+                err.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi.";
+            setError(message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -54,11 +102,33 @@ export default function CompleteData() {
                 Lengkapi data terlebih dahulu untuk dapat masuk ke dalam dashboard
             </p>
 
-            {/* Row 1: Tinggi Badan & Berat Badan */}
+            {/* Error Message */}
+            {error && (
+                <div
+                    className="mb-5 px-4 py-2 rounded-xl text-sm text-center"
+                    style={{ backgroundColor: "rgba(255, 100, 100, 0.15)", color: "#c0392b" }}
+                >
+                    {error}
+                </div>
+            )}
+
+            {/* Row 1: Nama Lengkap (full width) */}
+            <div className="mb-3">
+                <input
+                type="text"
+                placeholder="Masukan nama lengkap"
+                value={namaLengkap}
+                onChange={(e) => setNamaLengkap(e.target.value)}
+                className="w-full rounded-full px-5 py-3 text-sm outline-none"
+                style={inputStyle}
+                />
+            </div>
+
+            {/* Row 2: Tinggi Badan & Berat Badan */}
             <div className="flex gap-3 mb-3">
                 <input
                 type="number"
-                placeholder="Masukan tinggi Badan"
+                placeholder="Masukan tinggi badan (cm)"
                 value={tinggiBadan}
                 onChange={(e) => setTinggiBadan(e.target.value)}
                 className="w-0 flex-1 rounded-full px-5 py-3 text-sm outline-none"
@@ -66,7 +136,7 @@ export default function CompleteData() {
                 />
                 <input
                 type="number"
-                placeholder="Masukan berat badan"
+                placeholder="Masukan berat badan (kg)"
                 value={beratBadan}
                 onChange={(e) => setBeratBadan(e.target.value)}
                 className="w-0 flex-1 rounded-full px-5 py-3 text-sm outline-none"
@@ -74,25 +144,28 @@ export default function CompleteData() {
                 />
             </div>
 
-            {/* Row 2: Umur (full width) */}
+            {/* Row 3: Umur (full width) */}
             <div className="mb-8">
                 <input
                 type="number"
                 placeholder="Masukan umur"
                 value={umur}
                 onChange={(e) => setUmur(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 className="w-full rounded-full px-5 py-3 text-sm outline-none"
                 style={inputStyle}
                 />
             </div>
 
-            {/* Lanjut Button - centered, not full width */}
+            {/* Lanjut Button */}
             <div className="flex justify-center">
                 <button
-                className="rounded-full py-3 px-20 text-white font-medium text-sm transition-opacity hover:opacity-90 active:opacity-80"
+                onClick={handleSubmit}
+                disabled={isLoading}
+                className="rounded-full py-3 px-20 text-white font-medium text-sm transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ backgroundColor: "#8FD6B4", border: "1.5px solid #1a1a1a", minWidth: "280px" }}
                 >
-                Lanjut
+                {isLoading ? "Memproses..." : "Lanjut"}
                 </button>
             </div>
             </div>
