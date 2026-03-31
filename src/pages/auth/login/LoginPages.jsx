@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser, loginWithGoogle } from "../../../services/auth/LoginServices";
 
 const DiagonalPattern = () => (
     <svg
@@ -24,6 +25,46 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            setError("Email and password are required.");
+            return;
+        }
+
+        setError("");
+        setIsLoading(true);
+
+        try {
+            const data = await loginUser(email, password);
+
+            // Simpan token ke localStorage
+            localStorage.setItem("token", data.data.token);
+
+            // Arahkan berdasarkan status quiz
+            if (data.data.has_completed_quiz) {
+                navigate("/dashboard");
+            } else {
+                navigate("/quiz");
+            }
+        } catch (err) {
+            const message =
+                err.response?.data?.message || "Login failed. Please try again.";
+            setError(message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        try {
+            await loginWithGoogle(); // ini akan redirect browser ke Google
+        } catch (err) {
+            setError("Gagal memulai login Google. Coba lagi.");
+        }
+    };
 
     return (
         <div
@@ -51,6 +92,16 @@ export default function LoginPage() {
                 Welcome back! Please log in to access your account.
             </p>
 
+            {/* Error Message */}
+            {error && (
+                <div
+                    className="mb-4 px-4 py-2 rounded-xl text-sm text-center"
+                    style={{ backgroundColor: "rgba(255, 100, 100, 0.15)", color: "#c0392b" }}
+                >
+                    {error}
+                </div>
+            )}
+
             {/* Fields Row */}
             <div className="flex gap-3 mb-3">
                 {/* Email */}
@@ -74,6 +125,7 @@ export default function LoginPage() {
                     placeholder="Enter your Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                     className="flex-1 bg-transparent text-sm outline-none border-0"
                     style={{ color: "#4a6285" }}
                 />
@@ -108,10 +160,12 @@ export default function LoginPage() {
 
             {/* Login Button */}
             <button
-                className="w-full rounded-full py-3 text-white font-medium text-sm mb-3 transition-opacity hover:opacity-90 active:opacity-80"
+                onClick={handleLogin}
+                disabled={isLoading}
+                className="w-full rounded-full py-3 text-white font-medium text-sm mb-3 transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ backgroundColor: "#8FD6B4", border: "1.5px solid #1a1a1a" }}
             >
-                Login
+                {isLoading ? "Logging in..." : "Login"}
             </button>
 
             {/* Sign Up Button */}
@@ -136,8 +190,10 @@ export default function LoginPage() {
 
             {/* Google Button */}
             <div className="flex justify-center">
-                <button className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110">
-                {/* Google "G" logo */}
+                <button
+                    onClick={handleGoogleLogin}
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-8 h-8">
                     <path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.6 29.7 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6-6C34.5 5.4 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.8 0 20-7.7 20-21 0-1.3-.2-2.7-.5-4z"/>
                     <path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.1 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6-6C34.5 5.4 29.6 3 24 3c-7.6 0-14.2 4.3-17.7 10.7z"/>
