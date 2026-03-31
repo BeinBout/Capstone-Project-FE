@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
-import { questions, options } from "../../data/questions";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import getQuestions from "../../../services/landing/Quizservices.js";
 import { 
   ChevronRight, ChevronLeft, RotateCcw, CheckCircle2, 
   ShieldCheck, Heart, Lock, UserPlus, Sparkles, 
@@ -8,23 +9,58 @@ import {
 } from "lucide-react";
 
 export default function GAD7Quiz() {
+  const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState(new Array(questions.length).fill(-1));
+  const [answers, setAnswers] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState("");
 
-  const progress = ((currentStep + 1) / questions.length) * 100;
+  const loadQuestions = useCallback(async () => {
+    setIsLoading(true);
+    setApiError("");
 
- const handleAnswer = (value) => {
+    try {
+      const res = await getQuestions("initial");
+      const data = Array.isArray(res?.data?.data) ? res.data.data : [];
+
+      setQuizQuestions(data);
+      setAnswers(new Array(data.length).fill(null));
+      setCurrentStep(0);
+      setShowResult(false);
+      setIsRegistered(false);
+    } catch (err) {
+      setApiError(err?.response?.data?.message ?? "Gagal memuat pertanyaan dari server.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadQuestions();
+  }, [loadQuestions]);
+
+  const totalQuestions = quizQuestions.length;
+  const progress = totalQuestions > 0 ? ((currentStep + 1) / totalQuestions) * 100 : 0;
+  const currentQuestion = quizQuestions[currentStep];
+  const currentOptions = useMemo(
+    () => (Array.isArray(currentQuestion?.options)
+      ? currentQuestion.options.filter((opt) => typeof opt === "object" && opt !== null)
+      : []),
+    [currentQuestion]
+  );
+
+ const handleAnswer = (selectedOptionId, scoreValue) => {
   const newAnswers = [...answers];
-  newAnswers[currentStep] = value;
+  newAnswers[currentStep] = { selectedOptionId, scoreValue: Number(scoreValue) || 0 };
   setAnswers(newAnswers);
-  if (currentStep < questions.length - 1) {
-    setTimeout(() => setCurrentStep(currentStep + 1), 400);
+  if (currentStep < totalQuestions - 1) {
+    setTimeout(() => setCurrentStep((prev) => prev + 1), 400);
   }
 };
 
-  const totalScore = answers.reduce((acc, curr) => (curr !== -1 ? acc + curr : acc), 0);
+  const totalScore = answers.reduce((acc, curr) => (curr ? acc + (curr.scoreValue ?? 0) : acc), 0);
 
  const getSeverity = (score) => {
   if (score <= 4) return { label: "Minimal", color: "text-[#4CAF50]", bg: "bg-[#4CAF50]/10" };
@@ -32,8 +68,8 @@ export default function GAD7Quiz() {
   if (score <= 14) return { label: "Sedang", color: "text-[#E57373]", bg: "bg-[#E57373]/10" };
   return { label: "Berat", color: "text-[#E57373] font-bold", bg: "bg-[#E57373]/20" };
 };
-  const isLastStep = currentStep === questions.length - 1;
-  const isAllAnswered = !answers.includes(-1);
+  const isLastStep = currentStep === totalQuestions - 1;
+  const isAllAnswered = answers.length > 0 && !answers.includes(null);
 
   return (
     // Background Dasar
@@ -69,7 +105,25 @@ export default function GAD7Quiz() {
 
         <div className="bg-white rounded-[16px] shadow-[0px_6px_20px_rgba(30,41,59,0.06)] border border-[#E2E8F0] p-8 md:p-12 relative">
           
-          {!showResult ? (
+          {isLoading ? (
+            <div className="py-20 text-center">
+              <p className="text-[16px] text-[#64748B]">Memuat pertanyaan...</p>
+            </div>
+          ) : apiError ? (
+            <div className="py-20 text-center space-y-4">
+              <p className="text-[16px] text-[#E57373]">{apiError}</p>
+              <button
+                onClick={loadQuestions}
+                className="px-6 py-3 rounded-[10px] bg-[#8FD6B4] text-[#1E293B] font-semibold hover:opacity-90 transition-all"
+              >
+                Coba Lagi
+              </button>
+            </div>
+          ) : totalQuestions === 0 ? (
+            <div className="py-20 text-center">
+              <p className="text-[16px] text-[#64748B]">Pertanyaan belum tersedia.</p>
+            </div>
+          ) : !showResult ? (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               
               {/* Kolom Kiri: Pertanyaan & Progress */}
@@ -79,7 +133,7 @@ export default function GAD7Quiz() {
                    <span className="text-[#8FD6B4] font-medium text-[22px] block mb-2">Pertanyaan {currentStep + 1}</span>
                   
                    <h2 className="text-[28px] font-semibold text-[#1E293B] leading-[40px]">
-                     {questions[currentStep]}
+                     {currentQuestion?.question_text ?? "Pertanyaan tidak tersedia"}
                    </h2>
                 </div>
 
@@ -107,23 +161,23 @@ export default function GAD7Quiz() {
 
               {/* Kolom Kanan: Pilihan Jawaban (Button Radius 10px) */}
               <div className="lg:col-span-7 flex flex-col gap-4">
-                {options.map((opt) => (
+                {currentOptions.map((opt) => (
                   <button
-                    key={opt.value}
-                    onClick={() => handleAnswer(opt.value)}
+                    key={opt.id}
+                    onClick={() => handleAnswer(opt.id, opt.score_value)}
                     className={`group w-full flex items-center justify-between p-6 rounded-[10px] border transition-all duration-200 ${
-                      answers[currentStep] === opt.value
+                      answers[currentStep]?.selectedOptionId === opt.id
                         ? "bg-[#8FD6B4] border-[#5B8DEF] text-white shadow-lg shadow-[#5B8DEF]/20"
                         : "bg-white border-[#E2E8F0] hover:border-[#8FD6B4] hover:bg-[#8FD6B4]/5"
                     }`}
                   >
-                    <span className={`text-[16px] font-medium ${answers[currentStep] === opt.value ? "text-white" : "text-[#1E293B]"}`}>
-                      {opt.label}
+                    <span className={`text-[16px] font-medium ${answers[currentStep]?.selectedOptionId === opt.id ? "text-white" : "text-[#1E293B]"}`}>
+                      {opt.option_text}
                     </span>
                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      answers[currentStep] === opt.value ? "border-white bg-white" : "border-[#E2E8F0]"
+                      answers[currentStep]?.selectedOptionId === opt.id ? "border-white bg-white" : "border-[#E2E8F0]"
                     }`}>
-                      {answers[currentStep] === opt.value && <div className="w-2.5 h-2.5 bg-[#8FD6B4] rounded-full" />}
+                      {answers[currentStep]?.selectedOptionId === opt.id && <div className="w-2.5 h-2.5 bg-[#8FD6B4] rounded-full" />}
                     </div>
                   </button>
                 ))}
@@ -161,12 +215,14 @@ export default function GAD7Quiz() {
                        </div>
                        <h3 className="text-[22px] font-medium text-[#1E293B] mb-2">Simpan Hasil Kamu</h3>
                        <p className="text-[14px] text-[#64748B] mb-8">Daftar sekarang untuk mendapatkan panduan pemulihan khusus dan melacak mood harianmu.</p>
+                       <Link to="/login">
                        <button 
                          onClick={() => setIsRegistered(true)}
                         className="w-full sm:w-auto mx-auto px-8 py-4 bg-[#8FD6B4] text-white rounded-[10px] font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-lg shadow-[#5B8DEF]/20"
                        >
                          <UserPlus size={22} strokeWidth={1.5} className="shrink-0" />BUAT AKUN GRATIS
                        </button>
+                       </Link>
                     </div>
                  </div>
                )}
@@ -192,7 +248,7 @@ export default function GAD7Quiz() {
                   </div>
 
                   <button 
-                    onClick={() => {setAnswers(new Array(questions.length).fill(-1)); setShowResult(false); setCurrentStep(0); setIsRegistered(false);}}
+                    onClick={() => {setAnswers(new Array(totalQuestions).fill(null)); setShowResult(false); setCurrentStep(0); setIsRegistered(false);}}
                     className="flex items-center gap-2 mx-auto text-[#64748B] hover:text-[#5B8DEF] font-medium text-[14px] transition-colors"
                   >
                     <RotateCcw size={18} strokeWidth={1.5} /> ULANGI PENILAIAN
