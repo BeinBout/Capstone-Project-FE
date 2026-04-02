@@ -41,7 +41,6 @@ export default function CompleteData() {
             return;
         }
 
-        // Ambil quiz_answers yang sudah dikumpulkan di step sebelumnya
         const quizAnswers = JSON.parse(localStorage.getItem("quiz_answers") || "[]");
         if (quizAnswers.length === 0) {
             setError("Jawaban kuis tidak ditemukan. Silakan ulangi kuis.");
@@ -66,7 +65,7 @@ export default function CompleteData() {
             // Bersihkan quiz_answers yang sudah tidak diperlukan
             localStorage.removeItem("quiz_answers");
 
-            navigate("/quiz/result");
+            navigate("/quiz-analysis");
         } catch (err) {
             const message =
                 err.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi.";
@@ -83,7 +82,7 @@ export default function CompleteData() {
         >
         {/* Card */}
         <div
-            className="relative w-[660px] rounded-3xl overflow-hidden shadow-2xl"
+            className="relative w-165 rounded-3xl overflow-hidden shadow-2xl"
             style={{ backgroundColor: "#B8D0EE" }}
         >
             {/* Diagonal background pattern */}
