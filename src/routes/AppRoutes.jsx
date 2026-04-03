@@ -13,9 +13,9 @@ import Quiz from "../pages/landing/quiz/QuizPages";
 import About from "../pages/landing/about/AboutPages";
 
 // Dashboard & Features
-import Dashboard from '../pages/user/Dashboard'
-import DailyJournal from '../pages/user/DailyJournal'
-import WeeklyCheckup from '../pages/user/WeeklyCheckup'
+import Dashboard from '../pages/dashboard/Dashboard'
+import DailyJournal from '../pages/dashboard/DailyJournal'
+import WeeklyCheckup from '../pages/dashboard/WeeklyCheckup'
 
 // Not Found
 import NotFound from "../pages/404/NotFound";
