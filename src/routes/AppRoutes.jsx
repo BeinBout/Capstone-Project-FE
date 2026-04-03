@@ -20,20 +20,28 @@ import WeeklyCheckup from '../pages/user/WeeklyCheckup'
 // Not Found
 import NotFound from "../pages/404/NotFound";
 
+// Middleware
+import { AuthOnly, NewUserOnly } from './Middleware'
+
 function AppRoutes() {
     return (
         <Routes>
-            {/* Auth */}
-            <Route path="/login" element={<LoginPages />} />
-            <Route path="/register" element={<RegisterPages />} />
-            <Route path="/complete-data" element={<CompleteData />} />
-            <Route path="/quiz-analysis" element={<QuizAnalysisResult />} />
-            <Route path="/callback" element={<CallbackPage />} />
 
-            {/* Dashboard & Features */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/journal" element={<DailyJournal />} />
-            <Route path="/checkup" element={<WeeklyCheckup />} />
+            {/* Auth (NEW USER ONLY) */}
+            <Route element={<NewUserOnly />}>
+                <Route path="/login" element={<LoginPages />} />
+                <Route path="/register" element={<RegisterPages />} />
+                <Route path="/complete-data" element={<CompleteData />} />
+                <Route path="/quiz-analysis" element={<QuizAnalysisResult />} />
+                <Route path="/callback" element={<CallbackPage />} />
+            </Route>
+
+            {/* Dashboard & Features (AUTH ONLY) */}
+            <Route element={<AuthOnly />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/journal" element={<DailyJournal />} />
+                <Route path="/checkup" element={<WeeklyCheckup />} />
+            </Route>
 
             {/* Landing Page */}  
             <Route path="/" element={<LandingPages />} />
