@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 export default function Layout({ children }) {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { logout } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-[#A8C4E9]">
@@ -73,7 +75,7 @@ export default function Layout({ children }) {
           </h2>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-[#FDE68A] flex justify-center items-center font-bold text-gray-800">A</div>
-            <span className="font-medium text-gray-800 hidden md:block">Andi</span>
+            <button className="font-medium text-gray-800 hidden md:block cursor-pointer" onClick={logout}>Logout</button>
           </div>
         </header>
 
