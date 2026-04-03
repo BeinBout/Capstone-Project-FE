@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import useAuth from '../hooks/useAuth'
+import { Skeleton } from "./Loading";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { authenticated, loadings } = useAuth();
 
   return (
     <div className="flex justify-center pt-6 px-4">
@@ -34,20 +37,30 @@ export default function Navbar() {
         </ul>
 
         {/* Desktop Button */}
-        <div className="hidden md:flex gap-3">
+        <div className="hidden md:flex gap-3 min-w-[150px] justify-end">
+          {loadings ? (
+            <Skeleton size="sm" color="mint" />
+          ) : authenticated ? (
+            <Link to="/dashboard">
+              <button className="bg-[#8FD6B4] px-4 py-1 rounded-[10px] text-[14px] text-white hover:opacity-90">
+                Dashboard
+              </button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/register">
+                <button className="px-4 py-1 rounded-[10px] hover:bg-[#8FD6B4] hover:text-white transition text-[14px]">
+                  Sign Up
+                </button>
+              </Link>
 
-          <Link to="/register">
-            <button className="px-4 py-1 rounded-[10px] hover:bg-[#8FD6B4] hover:text-white transition text-[14px]">
-              Sign Up
-            </button>
-          </Link>
-
-          <Link to="/login">
-            <button className="bg-[#8FD6B4] px-4 py-1 rounded-[10px] text-[14px] text-white hover:opacity-90">
-              Login
-            </button>
-          </Link>
-
+              <Link to="/login">
+                <button className="bg-[#8FD6B4] px-4 py-1 rounded-[10px] text-[14px] text-white hover:opacity-90">
+                  Login
+                </button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Hamburger Button */}
