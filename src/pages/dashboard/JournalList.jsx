@@ -44,9 +44,11 @@ export default function JournalList() {
     const fetchJournals = async () => {
       try {
         setIsLoading(true);
-        const response = await getAllJournals();
+        const response = await getAllJournals(selectedMonth, selectedYear);
         if (response.status === 'success' && response.data) {
           setJournals(response.data);
+        } else {
+          setJournals([])
         }
       } catch (err) {
         setError('Gagal memuat jurnal.');
@@ -55,7 +57,7 @@ export default function JournalList() {
       }
     };
     fetchJournals();
-  }, []);
+  }, [selectedMonth, selectedYear]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });

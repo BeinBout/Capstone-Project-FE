@@ -64,7 +64,10 @@ export default function WeeklyCheckup() {
     setIsSubmitting(true);
     setApiError("");
     try {
-      const res = await submitWeeklyCheckup(answers);
+      const payload = {
+        quiz_answers: answers
+      }
+      const res = await submitWeeklyCheckup(payload);
       setCheckupResult(res.data);
       setCurrentStep(totalQuestions + 2); // Go to result page
     } catch (err) {
