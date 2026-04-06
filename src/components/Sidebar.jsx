@@ -1,86 +1,158 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
+import { Menu, X, LayoutDashboard, BookOpen, Activity, ChevronDown, User, LogOut } from 'lucide-react';
+import useAuth from '../hooks/useAuth'; // Tambahkan import useAuth
 
 export default function Layout({ children }) {
   const location = useLocation();
   const currentPath = location.pathname;
-  const { logout } = useAuth();
+  const { logout, user } = useAuth(); // Gunakan useAuth hook
+  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#A8C4E9]">
+    <div className="flex min-h-screen bg-[#A8C4E9] font-sans">
       
+      {/* OVERLAY MOBILE */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-[#1E293B]/50 z-[40] md:hidden transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+
       {/* SIDEBAR */}
-      <aside className="fixed z-[100] bottom-0 left-0 w-full h-[70px] bg-white border-t border-[#E2E8F0] px-4 flex justify-center items-center shadow-[0_-4px_12px_rgba(0,0,0,0.05)] md:z-10 md:top-0 md:bottom-auto md:w-[250px] md:h-screen md:bg-[#F8FAFC] md:p-6 md:border-r md:border-t-0 md:block md:shadow-none">
+      <aside className={`fixed top-0 left-0 h-full w-[250px] bg-[#FFFFFF] z-[50] border-r border-[#E2E8F0] transform transition-transform duration-300 ease-in-out md:translate-x-0 flex flex-col ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         
-        <div className="hidden md:flex items-center gap-2 mb-10">
-          <span className="text-2xl">🧩</span>
-          <h2 className="text-[#5B8DEF] text-[20px] font-bold">BeinBout</h2>
+        <div className="flex items-center justify-between p-6 mb-8">
+          <div className="flex items-center gap-2">
+            <h2 className="text-[#1E293B] text-[22px] font-semibold">Bein<span className="text-[#8FD6B4]">Bout</span></h2>
+          </div>
+          <button className="md:hidden text-[#64748B] bg-transparent border-none cursor-pointer" onClick={() => setIsSidebarOpen(false)}>
+            <X size={24} strokeWidth={1.5} />
+          </button>
         </div>
         
-        <small className="hidden md:block text-[#64748B] font-semibold tracking-[1px] text-[12px] uppercase mb-4">MENU</small>
-        
-        <nav className="flex flex-row w-full justify-around items-center gap-0 mt-0 md:flex-col md:mt-4 md:gap-2 md:w-full md:justify-start">
+        <div className="px-6 flex-1">
+          <small className="block text-[#64748B] font-semibold tracking-[1px] text-[14px] uppercase mb-4">MENU</small>
           
-          {/* Menu Dashboard */}
-          <Link 
-            to="/dashboard"
-            className={`flex flex-col md:flex-row items-center md:justify-start py-2 px-1 md:py-3 md:px-4 gap-1 md:gap-3 rounded-lg cursor-pointer w-full transition-all duration-200 ${
-              currentPath === '/dashboard' 
-                ? 'text-[#5B8DEF] font-bold md:bg-[#E0E7FF]' 
-                : 'text-[#94A3B8] md:text-[#64748B] hover:bg-[#F1F5F9]'
-            }`}
-          >
-            <span className="text-lg md:text-xl">📊</span> 
-            <span className="text-[10px] sm:text-[11px] md:text-base">Dashboard</span>
-          </Link>
+          <nav className="flex flex-col gap-2">
+            <Link 
+              to="/dashboard"
+              className={`flex items-center py-3 px-4 gap-4 rounded-[10px] transition-all duration-200 ${
+                currentPath === '/dashboard' 
+                  ? 'bg-[#5B8DEF]/10 text-[#8FD6B4] font-semibold' 
+                  : 'text-[#64748B] hover:bg-[#F1F5F9] font-normal'
+              }`}
+            >
+              <LayoutDashboard size={24} strokeWidth={1.5} />
+              <span className="text-[16px]">Dashboard</span>
+            </Link>
 
-          {/* Menu Daily Journal */}
-          <Link 
-            to="/journal"
-            className={`flex flex-col md:flex-row items-center md:justify-start py-2 px-1 md:py-3 md:px-4 gap-1 md:gap-3 rounded-lg cursor-pointer w-full transition-all duration-200 ${
-              currentPath === '/journal' 
-                ? 'text-[#5B8DEF] font-bold md:bg-[#E0E7FF]' 
-                : 'text-[#94A3B8] md:text-[#64748B] hover:bg-[#F1F5F9]'
-            }`}
-          >
-            <span className="text-lg md:text-xl">📓</span> 
-            <span className="text-[10px] sm:text-[11px] md:text-base">Daily Journal</span>
-          </Link>
+            <Link 
+              to="/journal"
+              className={`flex items-center py-3 px-4 gap-4 rounded-[10px] transition-all duration-200 ${
+                currentPath.startsWith('/journal') 
+                  ? 'bg-[#5B8DEF]/10 text-[#8FD6B4] font-semibold' 
+                  : 'text-[#64748B] hover:bg-[#F1F5F9] font-normal'
+              }`}
+            >
+              <BookOpen size={24} strokeWidth={1.5} />
+              <span className="text-[16px]">Daily Journal</span>
+            </Link>
 
-          {/* Menu Weekly Checkup */}
-          <Link 
-            to="/checkup"
-            className={`flex flex-col md:flex-row items-center md:justify-start py-2 px-1 md:py-3 md:px-4 gap-1 md:gap-3 rounded-lg cursor-pointer w-full transition-all duration-200 ${
-              currentPath === '/checkup' 
-                ? 'text-[#5B8DEF] font-bold md:bg-[#E0E7FF]' 
-                : 'text-[#94A3B8] md:text-[#64748B] hover:bg-[#F1F5F9]'
-            }`}
-          >
-            <span className="text-lg md:text-xl">🩺</span> 
-            <span className="text-[10px] sm:text-[11px] md:text-base">Weekly Checkup</span>
-          </Link>
-
-        </nav>
+            <Link 
+              to="/checkup"
+              className={`flex items-center py-3 px-4 gap-4 rounded-[10px] transition-all duration-200 ${
+                currentPath === '/checkup' 
+                  ? 'bg-[#5B8DEF]/10 text-[#8FD6B4] font-semibold' 
+                  : 'text-[#64748B] hover:bg-[#F1F5F9] font-normal'
+              }`}
+            >
+              <Activity size={24} strokeWidth={1.5} />
+              <span className="text-[16px]">Weekly Checkup</span>
+            </Link>
+          </nav>
+        </div>
       </aside>
 
-      {/* MAIN CONTENT */}
-      <main className="ml-0 p-4 pb-[90px] flex-1 w-full md:ml-[250px] md:p-8 md:pb-8">
-        <header className="flex justify-between items-center mb-6 bg-white p-4 md:py-4 md:px-8 rounded-xl md:rounded-2xl shadow-[0_4px_6px_rgba(0,0,0,0.02)]">
-          <h2 className="text-lg md:text-xl font-bold text-gray-800">
-            {/* Judul berubah mengikuti URL */}
-            {currentPath === '/dashboard' && 'Dashboard Summary'}
-            {currentPath === '/journal' && 'Daily Journal'}
-            {currentPath === '/checkup' && 'Weekly Checkup'}
-          </h2>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#FDE68A] flex justify-center items-center font-bold text-gray-800">A</div>
-            <button className="font-medium text-gray-800 hidden md:block cursor-pointer" onClick={logout}>Logout</button>
-          </div>
-        </header>
+      {/* MAIN CONTENT AREA */}
+      <main className="flex-1 w-full md:ml-[250px] px-4 md:px-8 flex flex-col min-h-screen">
+        
+        {/* WRAPPER STICKY DENGAN BACKGROUND BIRU BIAR KONTEN NGGAK NEMBUS */}
+        <div className="sticky top-0 z-[40] pt-6 pb-2 mb-4 bg-[#A8C4E9] -mx-4 px-4 md:-mx-8 md:px-8">
+          <header className="flex justify-between items-center bg-[#FFFFFF] p-4 md:py-4 md:px-8 rounded-[16px] shadow-[0_6px_20px_rgba(30,41,59,0.06)] border border-[#E2E8F0] relative">
+            
+            <div className="flex items-center gap-4">
+              <button className="md:hidden text-[#1E293B] bg-transparent border-none cursor-pointer" onClick={() => setIsSidebarOpen(true)}>
+                <Menu size={24} strokeWidth={1.5} />
+              </button>
+<h2 className="text-[22px] md:text-[28px] font-semibold text-[#1E293B]">
+                {currentPath === '/dashboard' && 'Dashboard'}
+                {currentPath === '/journal' && 'Daily Journal'}
+                {currentPath === '/journal/new' && 'Tulis Jurnal'}
+                {currentPath.startsWith('/journal/') && currentPath !== '/journal/new' && 'Detail Jurnal'}
+                {currentPath === '/checkup' && 'Weekly Checkup'}
+              </h2>
+            </div>
+
+            {/* DROPDOWN PROFILE */}
+            <div className="relative">
+              <button 
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="flex items-center gap-2 cursor-pointer border-none bg-transparent"
+              >
+            <div className="w-10 h-10 rounded-[10px] bg-[#8FD6B4] flex justify-center items-center font-semibold text-[#1E293B] text-[16px] overflow-hidden">
+              {user?.user?.avatar_url ? (
+                <img 
+                  src={user?.user?.avatar_url} 
+                  alt={`Avatar ${user?.user?.nama_lengkap || 'User'}`} 
+                  className="w-full h-full object-cover" 
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                user?.user?.nama_lengkap 
+                  ? user.user.nama_lengkap
+                      .split(" ")
+                      .filter(Boolean)
+                      .slice(0, 2)
+                      .map(n => n[0])
+                      .join("")
+                      .toUpperCase() 
+                  : "U" 
+              )}
+            </div>
+                <div className="hidden md:block text-left">
+                  <span className="block font-semibold text-[#1E293B] text-[14px]">{user?.user?.username}</span>
+                </div>
+                <ChevronDown size={16} className="text-[#64748B] hidden md:block" />
+              </button>
+
+              {isProfileOpen && (
+                <div className="absolute right-0 top-[56px] w-[240px] bg-[#FFFFFF] rounded-[16px] shadow-[0_6px_20px_rgba(30,41,59,0.06)] border border-[#E2E8F0] py-2 z-50">
+                  <div className="px-4 py-3 border-b border-[#E2E8F0]">
+                    <p className="text-[16px] font-semibold text-[#1E293B]">{user?.user?.nama_lengkap}</p>
+                    <p className="text-[14px] text-[#64748B]">{user?.user?.email}</p>
+                  </div>
+                  <button className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-[#F1F5F9] text-[#1E293B] transition-colors border-none bg-transparent cursor-pointer">
+                    <User size={16} strokeWidth={1.5} /> Profil Saya
+                  </button>
+                  {/* FUNGSI LOGOUT MENGGUNAKAN useAuth */}
+                  <button 
+                    onClick={logout} 
+                    className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-[#F1F5F9] text-[#E57373] transition-colors border-none bg-transparent cursor-pointer"
+                  >
+                    <LogOut size={16} strokeWidth={1.5} /> Keluar
+                  </button>
+                </div>
+              )}
+            </div>
+          </header>
+        </div>
 
         {/* AREA KONTEN DINAMIS */}
-        <div>
+        <div className="flex-1 pb-8">
           {children}
         </div>
       </main>

@@ -15,6 +15,8 @@ import About from "../pages/landing/about/AboutPages";
 // Dashboard & Features
 import Dashboard from '../pages/dashboard/Dashboard'
 import DailyJournal from '../pages/dashboard/DailyJournal'
+import JournalList from '../pages/dashboard/JournalList'
+import JournalDetail from '../pages/dashboard/JournalDetail'
 import WeeklyCheckup from '../pages/dashboard/WeeklyCheckup'
 
 // Not Found
@@ -39,7 +41,9 @@ function AppRoutes() {
             {/* Dashboard & Features (AUTH ONLY) */}
             <Route element={<AuthOnly />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/journal" element={<DailyJournal />} />
+                <Route path="/journal" element={<JournalList />} />
+                <Route path="/journal/new" element={<DailyJournal />} />
+                <Route path="/journal/:id" element={<JournalDetail />} />
                 <Route path="/checkup" element={<WeeklyCheckup />} />
             </Route>
 
