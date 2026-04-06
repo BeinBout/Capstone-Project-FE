@@ -5,9 +5,7 @@ export const getWeeklyQuestions = async () => {
   return response
 }
 
-export const submitWeeklyCheckup = async (quizAnswers) => {
-  const response = await api.post('/weekly-checkup', {
-    quiz_answers: quizAnswers
-  })
+export const submitWeeklyCheckup = async (payload) => {
+  const response = await api.post('/weekly-checkup', payload)
   return response
 }
