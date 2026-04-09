@@ -143,9 +143,6 @@ export default function Layout({ children }) {
                     <p className="text-[16px] font-semibold text-[#1E293B] truncate">{user?.user?.nama_lengkap}</p>
                     <p className="text-[14px] text-[#64748B] truncate">{user?.user?.email}</p>
                   </div>
-                  <button className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-[#F1F5F9] text-[#1E293B] transition-colors border-none bg-transparent cursor-pointer">
-                    <User size={16} strokeWidth={1.5} /> Profil Saya
-                  </button>
                   <button 
                     onClick={logout} 
                     className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-[#F1F5F9] text-[#E57373] transition-colors border-none bg-transparent cursor-pointer"

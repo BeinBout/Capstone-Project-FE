@@ -84,7 +84,7 @@ export default function GAD7Quiz() {
   }
 
   return (
-    <main className="min-h-screen bg-[#A8C4E9] p-8 md:p-12 flex flex-col items-center justify-center relative overflow-hidden font-sans">
+    <main className="min-h-screen bg-gradient-to-r from-[#A8C4E9] via-[#BBD3F2] to-[#DCE8F9] flex justify-center px-4 py-16">
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#8FD6B4] rounded-full mix-blend-multiply filter blur-3xl opacity-30" />
       <div className="absolute -bottom-24 -right-24 w-[480px] h-[480px] bg-[#5B8DEF] rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
       
@@ -101,7 +101,7 @@ export default function GAD7Quiz() {
             <ShieldCheck size={18} /> Terenkripsi & Aman
           </div>
           <h1 className="text-4xl font-bold text-[#1E293B] mb-2">
-            Mood Assessment <span className="text-black">Bein</span><span className="text-white">Bout</span>
+            Mood Assessment <span className="text-black">Bein</span><span className="text-[#8FD6B4]">Bout</span>
           </h1>
         </div>
 

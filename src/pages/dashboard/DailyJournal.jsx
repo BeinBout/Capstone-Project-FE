@@ -265,10 +265,6 @@ export default function DailyJournal() {
               {isDateFilled(selectedDate.getDate()) && (
                 <span className="bg-[#8FD6B4] text-white py-1 px-3 rounded-full text-[12px] font-semibold">Sudah Diisi</span>
               )}
-              {/* Daily Metrics */}
-              <div className="bg-[#F1F5F9] px-4 py-2 rounded-[10px]">
-                <span className="text-[12px] text-[#64748B] block">Metrik Harian</span>
-              </div>
             </div>
           </div>
 
