@@ -33,7 +33,7 @@ function AppRoutes() {
             <Route element={<NewUserOnly />}>
                 <Route path="/login" element={<LoginPages />} />
                 <Route path="/register" element={<RegisterPages />} />
-                <Route path="/quiz-analysis" element={<QuizAnalysisResult />} />
+                <Route path="/complete-data" element={<CompleteData />} />
                 <Route path="/callback" element={<CallbackPage />} />
             </Route>
 
@@ -44,7 +44,7 @@ function AppRoutes() {
                 <Route path="/journal/new" element={<DailyJournal />} />
                 <Route path="/journal/:id" element={<JournalDetail />} />
                 <Route path="/checkup" element={<WeeklyCheckup />} />
-                <Route path="/complete-data" element={<CompleteData />} />
+                <Route path="/quiz-analysis" element={<QuizAnalysisResult />} />
             </Route>
 
             {/* Landing Page */}  
