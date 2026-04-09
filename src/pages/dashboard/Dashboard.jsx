@@ -75,7 +75,9 @@ export default function Dashboard() {
 
         <div className="bg-[#FFFFFF] p-5 rounded-[16px] shadow-[0_4px_12px_rgba(30,41,59,0.03)] border border-[#E2E8F0]">
           <small className="text-[#64748B] text-[13px] uppercase font-semibold tracking-wider">Progress Jurnal</small>
-          <h2 className="mt-1 text-[22px] font-bold text-[#8FD6B4] capitalize">{stats?.progress_status || '-'}</h2>
+          <h2 className="mt-1 text-[22px] font-bold text-[#8FD6B4] capitalize">
+            {stats?.progress_status?.replace(/_/g, ' ') || '-'}
+          </h2>
         </div>
       </div>
 
