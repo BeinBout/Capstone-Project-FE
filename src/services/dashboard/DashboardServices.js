@@ -1,22 +1,25 @@
 import api from '../../lib/api'
 
 const DashboardService = {
-  // --- Fungsi Individual ---
   
   getStats: async () => {
-    return await api.get('/dashboard/stats').data;
+    const res = await api.get('/dashboard/stats');
+    return res.data;
   },
 
   getMainData: async () => {
-    return await api.get('/dashboard/main').data;
+    const res = await api.get('/dashboard/main');
+    return res.data;
   },
 
   getChartData: async () => {
-    return await api.get('/dashboard/chart').data;
+    const res = await api.get('/dashboard/chart');
+    return res.data;
   },
 
   checkWCAvailability: async () => {
-    return await api.get('/dashboard/is-wc-available').data;
+    const res = await api.get('/dashboard/is-wc-available');
+    return res.data;
   },
 
   getAllDashboardData: async () => {

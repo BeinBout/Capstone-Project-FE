@@ -79,7 +79,6 @@ export default function QuizAnalysisResult() {
         : [{ label: "general", value: 100 }];
 
     const handleDashboard = () => {
-        localStorage.removeItem("quiz_result");
         navigate("/dashboard");
     };
 

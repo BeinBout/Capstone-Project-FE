@@ -30,9 +30,8 @@ export default function WeeklyCheckup() {
     setApiError("");
     try {
       // 1. Cek Ketersediaan
-      const [statsJson, mainJson, chartJson, wcJson] = await DashboardService.getAllDashboardData();
-      
-      if (wcJson?.data?.is_available === false) {
+      const wcStatus = await DashboardService.checkWCAvailability();
+      if (wcStatus?.data?.is_available === false) {
         setIsAvailable(false);
         setIsLoading(false);
         return; 

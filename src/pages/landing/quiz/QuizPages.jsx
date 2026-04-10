@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import getQuestions from "../../../services/landing/Quizservices.js";
 import useAuth from '../../../hooks/useAuth.jsx';
 import { 
@@ -10,6 +11,7 @@ import {
 
 export default function GAD7Quiz() {
   const { authenticated } = useAuth();
+  const navigate = useNavigate();
   
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
@@ -34,6 +36,9 @@ export default function GAD7Quiz() {
 
   useEffect(() => {
     loadQuestions();
+    if (authenticated && localStorage.getItem('quiz_answers')) {
+      navigate('/complete-data');
+    }
   }, [loadQuestions]);
 
   const handleAnswer = (questionId, optionId) => {
