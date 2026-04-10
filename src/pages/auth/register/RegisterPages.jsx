@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser, RegisterWithGoogle } from "../../../services/auth/RegisterServices";
+import DiagonalPattern from "../../../components/ui/pattern/DiagonalPattern";
 
-const DiagonalPattern = () => (
-    <svg
-        className="absolute inset-0 w-full h-full"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="xMidYMid slice"
-    >
-        <defs>
-            <pattern id="diag" width="80" height="80" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                <rect width="80" height="80" fill="transparent" />
-                <rect x="0" y="0" width="80" height="80" fill="rgba(255,255,255,0.08)" />
-                <polygon points="0,0 80,0 0,80" fill="rgba(255,255,255,0.06)" />
-            </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#diag)" />
+const EyeOpenIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    </svg>
+);
+
+const EyeClosedIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 4.411m0 0L21 21" />
     </svg>
 );
 
@@ -34,25 +31,18 @@ export default function RegisterPage() {
             setError("All fields are required.");
             return;
         }
-
         setError("");
         setIsLoading(true);
-
         try {
             const data = await registerUser({ username: name, email, password });
-
-            // Simpan token ke localStorage
             localStorage.setItem("token", data.data.token);
-
-            // Arahkan berdasarkan status quiz
             if (data.data.has_completed_quiz) {
                 navigate("/dashboard");
             } else {
                 navigate("/quiz");
             }
         } catch (err) {
-            const message =
-                err.response?.data?.message || "Register failed. Please try again.";
+            const message = err.response?.data?.message || "Register failed. Please try again.";
             setError(message);
         } finally {
             setIsLoading(false);
@@ -61,7 +51,7 @@ export default function RegisterPage() {
 
     const handleGoogleRegister = async () => {
         try {
-            await RegisterWithGoogle(); // ini akan redirect browser ke Google
+            await RegisterWithGoogle();
         } catch (err) {
             setError("Gagal memulai login Google. Coba lagi.");
         }
@@ -69,22 +59,21 @@ export default function RegisterPage() {
 
     return (
         <div
-            className="min-h-screen flex items-center justify-center"
+            className="min-h-screen flex items-center justify-center px-4 py-8"
             style={{ backgroundColor: "#A8C4E9" }}
         >
             {/* Card */}
             <div
-                className="relative w-[600px] rounded-3xl overflow-hidden shadow-2xl"
+                className="relative w-full max-w-[600px] rounded-3xl overflow-hidden shadow-2xl"
                 style={{ backgroundColor: "#B8D0EE" }}
             >
-                {/* Diagonal background pattern */}
                 <DiagonalPattern />
 
                 {/* Content */}
-                <div className="relative z-10 px-16 py-12">
+                <div className="relative z-10 px-6 sm:px-10 md:px-16 py-10 sm:py-12">
                     {/* Title */}
                     <h1
-                        className="text-center text-3xl font-semibold mb-1"
+                        className="text-center text-2xl sm:text-3xl font-semibold mb-1"
                         style={{ color: "#2d3748", fontFamily: "'Segoe UI', sans-serif" }}
                     >
                         Sign Up
@@ -120,55 +109,52 @@ export default function RegisterPage() {
                     </div>
 
                     {/* Row 2: Email & Password */}
-                    <div className="flex gap-3 mb-5">
-                        {/* Email */}
-                        <input
-                            type="email"
-                            placeholder="Enter your Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-0 flex-1 rounded-full px-5 py-3 text-sm outline-none"
-                            style={{
-                                backgroundColor: "rgba(255,255,255,0.75)",
-                                color: "#4a6285",
-                                border: "1.5px solid #1a1a1a",
-                            }}
-                        />
-
-                        {/* Password */}
-                        <div
-                            className="w-0 flex-1 flex items-center rounded-full px-5 py-3"
-                            style={{
-                                backgroundColor: "rgba(255,255,255,0.75)",
-                                border: "1.5px solid #1a1a1a",
-                            }}
-                        >
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Enter your Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && handleRegister()}
-                                className="flex-1 bg-transparent text-sm outline-none border-0"
-                                style={{ color: "#4a6285" }}
-                            />
-                            <button
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="ml-2 text-gray-400 hover:text-gray-600 transition-colors"
+                        <div className="flex flex-col sm:flex-row gap-3 mb-5">
+                            {/* Email */}
+                            <div
+                                className="flex-1 min-w-0 flex items-center rounded-full px-5 py-3"
+                                style={{
+                                    backgroundColor: "rgba(255,255,255,0.75)",
+                                    border: "1.5px solid #1a1a1a",
+                                }}
                             >
-                                {showPassword ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 4.411m0 0L21 21" />
-                                    </svg>
-                                ) : (
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                )}
-                            </button>
+                                <input
+                                    type="email"
+                                    placeholder="Enter your Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="flex-1 min-w-0 bg-transparent text-sm outline-none border-0"
+                                    style={{ color: "#4a6285" }}
+                                />
+                            </div>
+
+                            {/* Password */}
+                            <div
+                                className="flex-1 min-w-0 flex items-center rounded-full px-5 py-3"
+                                style={{
+                                    backgroundColor: "rgba(255,255,255,0.75)",
+                                    border: "1.5px solid #1a1a1a",
+                                }}
+                            >
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Enter your Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && handleRegister()}
+                                    className="flex-1 min-w-0 bg-transparent text-sm outline-none border-0"
+                                    style={{ color: "#4a6285" }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="ml-2 flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full text-gray-400 hover:text-gray-600 hover:bg-black/10 transition-colors"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                >
+                                    {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
                     {/* Sign Up Button */}
                     <button
