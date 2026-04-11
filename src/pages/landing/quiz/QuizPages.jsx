@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import getQuestions from "../../../services/landing/Quizservices.js";
 import useAuth from '../../../hooks/useAuth.jsx';
@@ -18,6 +18,7 @@ export default function GAD7Quiz() {
   const [answers, setAnswers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState("");
+  const nextStepTimeoutRef = useRef(null);
 
   const loadQuestions = useCallback(async () => {
     setIsLoading(true);
@@ -41,6 +42,14 @@ export default function GAD7Quiz() {
     }
   }, [authenticated, loadQuestions, navigate]);
 
+  useEffect(() => {
+    return () => {
+      if (nextStepTimeoutRef.current) {
+        clearTimeout(nextStepTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleAnswer = (questionId, optionId) => {
     const newAnswers = [...answers];
     newAnswers[currentStep] = {
@@ -50,19 +59,19 @@ export default function GAD7Quiz() {
     setAnswers(newAnswers);
 
     if (currentStep < quizQuestions.length - 1) {
-      setTimeout(() => setCurrentStep((prev) => prev + 1), 400);
+      if (nextStepTimeoutRef.current) clearTimeout(nextStepTimeoutRef.current);
+      nextStepTimeoutRef.current = setTimeout(() => setCurrentStep((prev) => prev + 1), 400);
     }
   };
 
   const saveToLocalStorage = () => {
-    if (!authenticated) {
-      localStorage.setItem("quiz_answers", JSON.stringify(answers));
-      window.location.href = '/login';
-      return;
-    };
-    
     localStorage.setItem("quiz_answers", JSON.stringify(answers));
-    window.location.href = "/complete-data";
+    if (!authenticated) {
+      navigate('/login');
+      return;
+    }
+
+    navigate('/complete-data');
   };
 
   const currentQuestion = quizQuestions[currentStep];

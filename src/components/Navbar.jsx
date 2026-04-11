@@ -75,25 +75,25 @@ export default function Navbar() {
         {open && (
           <div className="absolute top-16 right-0 bg-white w-[220px] rounded-xl shadow-lg p-4 flex flex-col gap-3 md:hidden">
 
-            <Link to="/">
+            <Link to="/" onClick={() => setOpen(false)}>
               <span className="px-3 py-2 rounded-[10px] hover:bg-[#8FD6B4] hover:text-white cursor-pointer transition">
                 Home
               </span>
             </Link>
 
-            <Link to="/about">
+            <Link to="/about" onClick={() => setOpen(false)}>
               <span className="px-3 py-2 rounded-[10px] hover:bg-[#8FD6B4] hover:text-white cursor-pointer transition">
                 About
               </span>
             </Link>
 
-            <Link to="/signup">
+            <Link to="/register" onClick={() => setOpen(false)}>
               <span className="px-3 py-2 rounded-[10px] hover:bg-[#8FD6B4] hover:text-white cursor-pointer transition">
                 Sign Up
               </span>
             </Link>
 
-            <Link to="/login">
+            <Link to="/login" onClick={() => setOpen(false)}>
               <span className="px-3 py-2 rounded-[10px] bg-[#8FD6B4] text-white text-center">
                 Login
               </span>

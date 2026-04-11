@@ -1,33 +1,36 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { FullPageLoading } from "../components/Loading";
 
 // Auth
-import LoginPages from '../pages/auth/login/LoginPages'
-import RegisterPages from '../pages/auth/register/RegisterPages'
-import CompleteData from '../pages/auth/complete/CompleteData'
-import QuizAnalysisResult from '../pages/auth/quiz-analysis/QuizAnalysisResult'
-import CallbackPage from '../pages/auth/callback/CallbackPage'
+const LoginPages = lazy(() => import('../pages/auth/login/LoginPages'));
+const RegisterPages = lazy(() => import('../pages/auth/register/RegisterPages'));
+const CompleteData = lazy(() => import('../pages/auth/complete/CompleteData'));
+const QuizAnalysisResult = lazy(() => import('../pages/auth/quiz-analysis/QuizAnalysisResult'));
+const CallbackPage = lazy(() => import('../pages/auth/callback/CallbackPage'));
 
 // landing Pages
-import LandingPages from "../../src/layouts/LandingLayouts";
-import Quiz from "../pages/landing/quiz/QuizPages";
-import About from "../pages/landing/about/AboutPages";
+const LandingPages = lazy(() => import('../../src/layouts/LandingLayouts'));
+const Quiz = lazy(() => import('../pages/landing/quiz/QuizPages'));
+const About = lazy(() => import('../pages/landing/about/AboutPages'));
 
 // Dashboard & Features
-import Dashboard from '../pages/dashboard/Dashboard'
-import DailyJournal from '../pages/dashboard/DailyJournal'
-import JournalList from '../pages/dashboard/JournalList'
-import JournalDetail from '../pages/dashboard/JournalDetail'
-import WeeklyCheckup from '../pages/dashboard/WeeklyCheckup'
+const Dashboard = lazy(() => import('../pages/dashboard/Dashboard'));
+const DailyJournal = lazy(() => import('../pages/dashboard/DailyJournal'));
+const JournalList = lazy(() => import('../pages/dashboard/JournalList'));
+const JournalDetail = lazy(() => import('../pages/dashboard/JournalDetail'));
+const WeeklyCheckup = lazy(() => import('../pages/dashboard/WeeklyCheckup'));
 
 // Not Found
-import NotFound from "../pages/404/NotFound";
+const NotFound = lazy(() => import('../pages/404/NotFound'));
 
 // Middleware
 import { AuthOnly, NewUserOnly } from './Middleware'
 
 function AppRoutes() {
     return (
-        <Routes>
+        <Suspense fallback={<FullPageLoading />}>
+            <Routes>
 
             {/* Auth (NEW USER ONLY) */}
             <Route element={<NewUserOnly />}>
@@ -54,7 +57,8 @@ function AppRoutes() {
 
             {/* Not Found */}
             <Route path="*" element={<NotFound />} />
-        </Routes>
+            </Routes>
+        </Suspense>
     );
 }
 

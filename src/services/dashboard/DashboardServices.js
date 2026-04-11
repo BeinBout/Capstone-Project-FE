@@ -24,18 +24,18 @@ const DashboardService = {
 
   getAllDashboardData: async () => {
     const [statsRes, mainRes, chartRes, wcRes] = await Promise.all([
-      await api.get('/dashboard/stats'),
-      await api.get('/dashboard/main'),
-      await api.get('/dashboard/chart'),
-      await api.get('/dashboard/is-wc-available')
+      api.get('/dashboard/stats'),
+      api.get('/dashboard/main'),
+      api.get('/dashboard/chart'),
+      api.get('/dashboard/is-wc-available')
     ]);
 
-    return Promise.all([
+    return [
       statsRes.data,
       mainRes.data,
       chartRes.data,
       wcRes.data
-    ]);
+    ];
   }
 };
 
