@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, LayoutDashboard, BookOpen, Activity, ChevronDown, User, LogOut } from 'lucide-react';
 import useAuth from '../hooks/useAuth'; 
@@ -7,10 +7,37 @@ export default function Layout({ children }) {
   const location = useLocation();
   const currentPath = location.pathname;
   const { logout, user } = useAuth(); 
+  const profileMenuRef = useRef(null);
   
   // Deteksi ukuran layar awal: Laptop (>=768px) otomatis true (terbuka), HP false (tertutup)
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsProfileOpen(false);
+  }, [currentPath]);
 
   return (
     <div className="flex min-h-screen bg-[#A8C4E9] font-sans overflow-x-hidden">
@@ -106,7 +133,7 @@ export default function Layout({ children }) {
             </div>
 
             {/* DROPDOWN PROFILE */}
-            <div className="relative">
+            <div className="relative" ref={profileMenuRef}>
               <button 
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                 className="flex items-center gap-2 cursor-pointer border-none bg-transparent"

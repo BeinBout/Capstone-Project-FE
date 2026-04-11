@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleOAuthCallback } from "../../../services/auth/LoginServices";
+import useAuth from "../../../hooks/useAuth";
 
 export default function CallbackPage() {
     const navigate = useNavigate();
+    const { refreshAuth } = useAuth();
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -12,6 +14,13 @@ export default function CallbackPage() {
                 const data = await handleOAuthCallback();
 
                 localStorage.setItem("token", data.data.token);
+
+                const authOk = await refreshAuth();
+                if (!authOk) {
+                    setError("Gagal memverifikasi sesi login. Silakan coba lagi.");
+                    setTimeout(() => navigate("/login"), 2000);
+                    return;
+                }
 
                 if (data.data.has_completed_quiz) {
                     navigate("/dashboard");
@@ -25,7 +34,7 @@ export default function CallbackPage() {
         };
 
         processCallback();
-    }, [navigate]);
+    }, [navigate, refreshAuth]);
 
     return (
         <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#A8C4E9" }}>

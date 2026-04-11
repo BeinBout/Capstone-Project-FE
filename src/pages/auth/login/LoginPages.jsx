@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, loginWithGoogle } from "../../../services/auth/LoginServices";
 import DiagonalPattern from "../../../components/ui/pattern/DiagonalPattern";
+import useAuth from "../../../hooks/useAuth";
 
 const EyeOpenIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -18,6 +19,7 @@ const EyeClosedIcon = () => (
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const { refreshAuth } = useAuth();
 
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
@@ -35,6 +37,13 @@ export default function LoginPage() {
         try {
             const data = await loginUser(email, password);
             localStorage.setItem("token", data.data.token);
+
+            const authOk = await refreshAuth();
+            if (!authOk) {
+                setError("Gagal memverifikasi sesi login. Coba lagi.");
+                return;
+            }
+
             if (data.data.has_completed_quiz) {
                 navigate("/dashboard");
             } else {

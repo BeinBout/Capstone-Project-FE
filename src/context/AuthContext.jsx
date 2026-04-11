@@ -29,13 +29,14 @@ export function AuthProvider({ children }) {
   );
 
   const checkAuth = useCallback(async () => {
+    setLoadings(true);
     const token = localStorage.getItem('token');
 
     if (!token) {
       setAuthenticated(false);
       setUser(null);
       setLoadings(false);
-      return;
+      return false;
     }
 
     try {
@@ -46,12 +47,14 @@ export function AuthProvider({ children }) {
       if (res.data?.status === 'success') {
         setUser(res.data.data);
         setAuthenticated(true);
+        return true;
       } else {
         throw new Error('Invalid token format');
       }
     } catch (e) {
       console.error('Auth Error:', e.response?.data?.message || e.message);
       logout('/');
+      return false;
     } finally {
       setLoadings(false);
     }
@@ -60,6 +63,27 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    const responseInterceptor = api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const status = error?.response?.status;
+        const hasToken = Boolean(localStorage.getItem('token'));
+        const requestUrl = error?.config?.url || '';
+
+        if (status === 401 && hasToken && !requestUrl.includes('/auth/verify/me')) {
+          logout('/login');
+        }
+
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      api.interceptors.response.eject(responseInterceptor);
+    };
+  }, [logout]);
 
   const value = useMemo(
     () => ({
