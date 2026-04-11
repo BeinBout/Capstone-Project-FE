@@ -74,10 +74,14 @@ export default function JournalList() {
 
   const filteredJournals = journals.filter(journal => {
     const journalDate = new Date(journal.entry_date.split('T')[0]);
+    const isPublicJournal = typeof journal.is_public === 'boolean'
+      ? journal.is_public
+      : !journal.is_private;
+
     if (selectedMonth && (journalDate.getMonth() + 1) !== selectedMonth) return false;
     if (selectedYear && journalDate.getFullYear() !== selectedYear) return false;
-    if (filter === 'public' && !journal.is_public) return false;
-    if (filter === 'private' && journal.is_public) return false;
+    if (filter === 'public' && !isPublicJournal) return false;
+    if (filter === 'private' && isPublicJournal) return false;
     return true;
   });
 
