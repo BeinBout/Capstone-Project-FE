@@ -39,7 +39,7 @@ export default function GAD7Quiz() {
     if (authenticated && localStorage.getItem('quiz_answers')) {
       navigate('/complete-data');
     }
-  }, [loadQuestions]);
+  }, [authenticated, loadQuestions, navigate]);
 
   const handleAnswer = (questionId, optionId) => {
     const newAnswers = [...answers];

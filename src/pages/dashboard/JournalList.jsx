@@ -44,13 +44,14 @@ export default function JournalList() {
     const fetchJournals = async () => {
       try {
         setIsLoading(true);
+        setError('');
         const response = await getAllJournals(selectedMonth, selectedYear);
         if (response.status === 'success' && response.data) {
           setJournals(response.data);
         } else {
           setJournals([])
         }
-      } catch (err) {
+      } catch {
         setError('Gagal memuat jurnal.');
       } finally {
         setIsLoading(false);
@@ -129,6 +130,8 @@ export default function JournalList() {
         {/* List Content */}
         {isLoading ? (
           <div className="text-center p-12 bg-white rounded-[16px] border border-[#E2E8F0]">Memuat...</div>
+        ) : error ? (
+          <div className="text-center p-12 bg-red-50 rounded-[16px] border border-red-200 text-red-600">{error}</div>
         ) : sortedJournals.length === 0 ? (
           <div className="text-center p-12 bg-white rounded-[16px] border border-[#E2E8F0]">Tidak ada jurnal ditemukan.</div>
         ) : (
