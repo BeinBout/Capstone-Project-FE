@@ -114,16 +114,6 @@ export default function DailyJournal() {
   const sleepDuration = calculateSleepDuration(sleepTime, wakeTime);
   const sleepQuality = getSleepQuality(userAge, sleepDuration.totalHours);
 
-  // Calculate daily metrics (average of mood intensity and sleep quality score)
-  const getSleepQualityScore = () => {
-    switch (sleepQuality) {
-      case 'excellent': return 5;
-      case 'good': return 3;
-      case 'poor': return 1;
-      default: return 3;
-    }
-  };
-
   // Word count
   const wordCount = countWords(note);
   const maxWords = 600;

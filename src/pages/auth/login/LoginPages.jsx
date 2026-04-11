@@ -51,7 +51,7 @@ export default function LoginPage() {
     const handleGoogleLogin = async () => {
         try {
             await loginWithGoogle();
-        } catch (err) {
+        } catch {
             setError("Gagal memulai login Google. Coba lagi.");
         }
     };

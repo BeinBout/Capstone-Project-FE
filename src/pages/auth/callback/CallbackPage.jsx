@@ -18,7 +18,7 @@ export default function CallbackPage() {
                 } else {
                     navigate("/quiz");
                 }
-            } catch (err) {
+            } catch {
                 setError("Login Google gagal. Silakan coba lagi.");
                 setTimeout(() => navigate("/login"), 3000);
             }

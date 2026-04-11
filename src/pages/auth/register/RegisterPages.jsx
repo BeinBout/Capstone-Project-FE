@@ -52,7 +52,7 @@ export default function RegisterPage() {
     const handleGoogleRegister = async () => {
         try {
             await RegisterWithGoogle();
-        } catch (err) {
+        } catch {
             setError("Gagal memulai login Google. Coba lagi.");
         }
     };

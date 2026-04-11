@@ -40,7 +40,6 @@ export default function JournalDetail() {
   const [journal, setJournal] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchJournal = async () => {
