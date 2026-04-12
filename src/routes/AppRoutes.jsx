@@ -12,7 +12,6 @@ const CallbackPage = lazy(() => import('../pages/auth/callback/CallbackPage'));
 // landing Pages
 const LandingPages = lazy(() => import('../../src/layouts/LandingLayouts'));
 const Quiz = lazy(() => import('../pages/landing/quiz/QuizPages'));
-const About = lazy(() => import('../pages/landing/about/AboutPages'));
 
 // Dashboard & Features
 const Dashboard = lazy(() => import('../pages/dashboard/Dashboard'));
@@ -53,7 +52,6 @@ function AppRoutes() {
             {/* Landing Page */}  
             <Route path="/" element={<LandingPages />} />
             <Route path="/quiz" element={<Quiz />} />
-            <Route path="/about" element={<About />} />
 
             {/* Not Found */}
             <Route path="*" element={<NotFound />} />
