@@ -1,7 +1,6 @@
 import { Heart, Lock, Brain, Sprout, UserCheck } from "lucide-react";
 
 export default function Values() {
-
   const values = [
     {
       icon: <Heart size={28} strokeWidth={1.5} />,
@@ -42,7 +41,6 @@ export default function Values() {
 
   return (
     <section className="max-w-[1200px] mx-auto py-24 px-6 relative overflow-hidden">
-
       {/* Background dekorasi */}
       <div className="absolute -top-20 -left-20 w-72 h-72 bg-[#8FD6B4] opacity-20 blur-3xl rounded-full"></div>
       <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-300 opacity-20 blur-3xl rounded-full"></div>
@@ -52,7 +50,6 @@ export default function Values() {
         <h2 className="text-[44px] font-semibold text-[#1E293B] mb-6">
           Our Values
         </h2>
-
         <p className="text-[#64748B] max-w-2xl mx-auto">
           Prinsip utama yang kami pegang untuk menemani perjalanan kesehatan mentalmu dengan cara yang lebih manusiawi.
         </p>
@@ -60,9 +57,7 @@ export default function Values() {
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-y-12">
-
         {values.map((item, i) => (
-
           <div
             key={i}
             style={{ animationDelay: `${i * 0.25}s` }}
@@ -71,21 +66,20 @@ export default function Values() {
             ${i === 0 ? 'md:col-span-2 lg:col-span-1 md:row-span-2 flex flex-col justify-end' : ''}
             `}
           >
-
             {/* Image */}
             {item.image && (
               <img
                 src={item.image}
                 alt={item.title}
-                className={`absolute object-contain opacity-40 transition-all duration-500 group-hover:scale-110 group-hover:opacity-70
-                ${i === 0 ? 'top-0 left-0 w-full h-[60%] object-cover p-4' : 'top-4 right-4 w-24 h-24'}
+                // Perubahan di sini: Mengganti object-contain menjadi object-cover di class dasar
+                className={`absolute object-cover opacity-40 transition-all duration-500 group-hover:scale-110 group-hover:opacity-70
+                ${i === 0 ? 'top-0 left-0 w-full h-[60%] p-4' : 'top-4 right-4 w-24 h-24'}
                 `}
               />
             )}
 
             {/* Content */}
             <div className={`relative z-10 ${i === 0 ? 'mt-[50%]' : ''}`}>
-
               {/* Icon */}
               <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 ${item.color}`}>
                 {item.icon}
@@ -100,15 +94,10 @@ export default function Values() {
               <p className="text-[#64748B] leading-relaxed">
                 {item.desc}
               </p>
-
             </div>
-
           </div>
-
         ))}
-
       </div>
-
     </section>
   );
 }
