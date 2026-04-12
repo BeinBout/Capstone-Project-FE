@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import HeroImg from "../assets/images/landing/Hero.jpeg";
 
 export default function Hero() {
   return (
@@ -14,7 +13,7 @@ export default function Hero() {
         {/* Image */}
         <div className="order-1 md:order-2 wind-right">
           <img
-            src={HeroImg}
+            src='/Hero.webp'
             alt="Mental Health"
             className="rounded-[16px] w-full h-[250px] md:h-[420px] object-cover breathing"
           />
