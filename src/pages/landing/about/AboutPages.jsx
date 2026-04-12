@@ -1,13 +1,10 @@
 import React from "react";
-import Navbar from "../../../components/Navbar";
-import Footer from "../../../components/Footer";
 
 export default function About() {
   return (
     <>
-      <Navbar />
 
-     <main className="min-h-screen bg-gradient-to-r from-[#A8C4E9] via-[#BBD3F2] to-[#DCE8F9] flex justify-center px-4 py-16">
+      <main className="min-h-screen bg-gradient-to-r from-[#A8C4E9] via-[#BBD3F2] to-[#DCE8F9] flex justify-center px-4 py-16">
         <div className="max-w-[1200px] w-full">
 
           {/* Title */}
@@ -115,8 +112,6 @@ export default function About() {
 
         </div>
       </main>
-
-      <Footer />
     </>
   );
 }
