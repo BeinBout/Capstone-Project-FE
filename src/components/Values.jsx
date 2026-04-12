@@ -1,9 +1,4 @@
 import { Heart, Lock, Brain, Sprout, UserCheck } from "lucide-react";
-import EmpatiImg from "../assets/images/landing/Empati.jpeg";
-import SelfImg from "../assets/images/landing/Self.jpeg";
-import SafeImg from "../assets/images/landing/Safe.jpeg";
-import GrowthImg from "../assets/images/landing/growth.jpeg";
-import AiImg from "../assets/images/landing/Ai.jpeg";
 
 export default function Values() {
 
@@ -13,35 +8,35 @@ export default function Values() {
       title: "Empathy First",
       desc: "Kami mendengar, bukan menghakimi. Setiap orang punya cerita yang layak didengar.",
       color: "bg-red-50 text-red-500",
-      image: EmpatiImg
+      image: '/Empati.webp'
     },
     {
       icon: <Lock size={28} strokeWidth={1.5} />,
       title: "Safe & Confidential",
       desc: "Privasi adalah prioritas. Ceritamu aman dan tidak akan pernah diperjualbelikan.",
       color: "bg-blue-50 text-blue-500",
-      image: SafeImg
+      image: '/Safe.webp'
     },
     {
       icon: <Brain size={28} strokeWidth={1.5} />,
       title: "Self-Awareness",
       desc: "Bukan memberi label, tetapi membantu kamu memahami pola emosimu dengan bijak.",
       color: "bg-purple-50 text-purple-500",
-      image: SelfImg
+      image: '/Self.webp'
     },
     {
       icon: <Sprout size={28} strokeWidth={1.5} />,
       title: "Growth",
       desc: "Tidak harus sempurna untuk bertumbuh. Setiap langkah kecil sangat berarti bagi kami.",
       color: "bg-green-50 text-green-500",
-      image: GrowthImg
+      image: '/growth.webp'
     },
     {
       icon: <UserCheck size={28} strokeWidth={1.5} />,
       title: "Human + AI",
       desc: "Teknologi membantu membaca pola, tetapi kamu tetap pemegang kendali penuh.",
       color: "bg-orange-50 text-orange-500",
-      image: AiImg
+      image: '/Ai.webp'
     }
   ];
 
